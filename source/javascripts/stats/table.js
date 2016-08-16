@@ -339,17 +339,17 @@ function createCORSRequest(method, url){
 // }
 
 // Maybo i do not need this one
-$.get("http://stats.datacite.org/proxy/search/list/generic?&fq=&facet.field=datacentre_facet&_=1471264922736", function( data ) {
-	var lines = data.split("\n");
-	for (i = 0; i < lines.length - 1; i++) {
-		var cols = lines[i].split(";");
-						var min = $.trim(cols[2]);
-						var max = $.trim(cols[3]);
-
-		var td_min = $("<td>").addClass("date").text(dateFormatter(min));
-		var td_max = $("<td>").addClass("date").text(dateFormatter(max));
-		rows.eq(i).append(td_min, td_max);
-	}
-
- alert( 'Successful cross-domain AJAX request.' );
-});
+// $.get("http://stats.datacite.org/proxy/search/list/generic?&fq=&facet.field=datacentre_facet&_=1471264922736", function( data ) {
+// 	var lines = data.split("\n");
+// 	for (i = 0; i < lines.length - 1; i++) {
+// 		var cols = lines[i].split(";");
+// 						var min = $.trim(cols[2]);
+// 						var max = $.trim(cols[3]);
+//
+// 		var td_min = $("<td>").addClass("date").text(dateFormatter(min));
+// 		var td_max = $("<td>").addClass("date").text(dateFormatter(max));
+// 		rows.eq(i).append(td_min, td_max);
+// 	}
+//
+//  alert( 'Successful cross-domain AJAX request.' );
+// });
