@@ -41,7 +41,7 @@ $.fn.addCol = function(header, field, fqs, linkable, css_class) {
 		return value.split(" ")[0];
 	}
 	var uiHrefConstructor = null;
-    if (linkable == null || linkable) 
+    if (linkable == null || linkable)
         uiHrefConstructor = function(data) {
             var new_fq = field + ':"' + data + '"';
             return makeUiHref(fqs.concat([new_fq]));
@@ -103,7 +103,7 @@ $.fn.addMinMaxCols = function(header, field, stats_field) {
         var mom = moment(str, "ddd MMM DD HH:mm:ss - YYYY");
         return mom == null ? "" : mom.format("YYYY-MM-DD");
     };
-	
+
 	$.ajax({
 		type : "GET",
 		url : getListUrl(),
@@ -117,7 +117,7 @@ $.fn.addMinMaxCols = function(header, field, stats_field) {
 				var cols = lines[i].split(";");
                 var min = $.trim(cols[2]);
                 var max = $.trim(cols[3]);
-				
+
 				var td_min = $("<td>").addClass("date").text(dateFormatter(min));
 				var td_max = $("<td>").addClass("date").text(dateFormatter(max));
 				rows.eq(i).append(td_min, td_max);
@@ -132,9 +132,9 @@ $.fn.addGenericCol= function(header, data, firstColFormatter, labelFormatter, ui
 	var table = this;
 	var rows = $("tbody tr", table);
 	var hasRows = rows.size() != 0;
-	
+
 	table.addColHeader(header, "pie");
-	
+
 	$.ajax({
 		type : "GET",
 		url : getListUrl(),
@@ -148,7 +148,7 @@ $.fn.addGenericCol= function(header, data, firstColFormatter, labelFormatter, ui
 				var cols = lines[i].split(";");
 				var value = cols[0];
 				var count = $.trim(cols[1]);
-				
+
 				var td = $("<td>").addClass("number");
                 if (css_class != null) td.addClass(css_class);
 				if (count == 0) {
@@ -160,7 +160,7 @@ $.fn.addGenericCol= function(header, data, firstColFormatter, labelFormatter, ui
 					a.attr("href", uiHrefConstructor(value));
 					td.append(a);
 				}
-				
+
 				if (hasRows) {
 					rows.eq(i).append(td);
 				} else {
@@ -170,7 +170,7 @@ $.fn.addGenericCol= function(header, data, firstColFormatter, labelFormatter, ui
 					tr.append(label_td, td);
 					$("tbody", table).append(tr);
 				}
-				
+
 			}
 			table.addColTotals();
 		}
@@ -224,7 +224,7 @@ $.fn.addAggregationCol = function(header, col, uiHrefConstructor) {
 		} else {
 			td.text(sum);
 		}
-		
+
 		row.append(td);
 	});
 	table.addColTotals("100%");
@@ -261,7 +261,7 @@ $.fn.addColTotals = function(sum, col) {
 			var el;
 			if (col == undefined)
 				el = $("td", this).last()
-			else 
+			else
 				el = $("td", this).eq(col);
 			var number = parseInt(el.text());
 			sum += number;
@@ -277,16 +277,16 @@ $.fn.makeTableSortable = function(options) {
 		sortInitialOrder : 'desc',
 		sortList : [[0,0]]
 	};
-	
+
 	var cur_options = $.extend({},default_options,options);
-	
+
 	$(this).addClass("tablesorter").tablesorter(cur_options);
-	
+
 }
 
 $.fn.removeRowsWithZeros = function(cols) {
 	this.filterRows(function() {
-		return $(this).isZeroRow(cols); 
+		return $(this).isZeroRow(cols);
 	});
 }
 
@@ -312,3 +312,44 @@ $.fn.isZeroRow = function(cols) {
 	})
 	return isZeroRow;
 }
+
+
+
+function createCORSRequest(method, url){
+	var xhr = new XMLHttpRequest();
+	if ("withCredentials" in xhr){
+			// XHR has 'withCredentials' property only if it supports CORS
+			xhr.open(method, url, true);
+	} else if (typeof XDomainRequest != "undefined"){ // if IE use XDR
+			xhr = new XDomainRequest();
+			xhr.open(method, url);
+	} else {
+			xhr = null;
+	}
+	return xhr;
+}
+
+// var request = createCORSRequest( "GET", "http://stats.datacite.org/proxy/search/list/generic?&fq=&facet.field=datacentre_facet&_=1471264922736" );
+// if ( request ){
+// 		console.log(request);
+//     // Define a callback function
+//     request.onload = function(){};
+//     // Send request
+//     request.send();
+// }
+
+// Maybo i do not need this one
+$.get("http://stats.datacite.org/proxy/search/list/generic?&fq=&facet.field=datacentre_facet&_=1471264922736", function( data ) {
+	var lines = data.split("\n");
+	for (i = 0; i < lines.length - 1; i++) {
+		var cols = lines[i].split(";");
+						var min = $.trim(cols[2]);
+						var max = $.trim(cols[3]);
+
+		var td_min = $("<td>").addClass("date").text(dateFormatter(min));
+		var td_max = $("<td>").addClass("date").text(dateFormatter(max));
+		rows.eq(i).append(td_min, td_max);
+	}
+
+ alert( 'Successful cross-domain AJAX request.' );
+});
